@@ -93,8 +93,6 @@ func (c client) AddSubscriber(format commons.Format, mailingListID string, reque
 	}
 
 	url := fmt.Sprintf("%s/subscribers/%s/subscribe.%s?apikey=%s", c.BaseURL, mailingListID, format, c.APIKey)
-	fmt.Printf("ini url %s\n", url)
-	fmt.Printf("ini request %v\n", request)
 	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, url, bytes.NewReader(payload))
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())
