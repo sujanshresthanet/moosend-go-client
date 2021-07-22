@@ -15,6 +15,9 @@ func MakeRequest(httpClient *httpclient.HttpClient, method, url string, body io.
 		return
 	}
 
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+
 	resp, err = httpClient.Client.Do(req)
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/kitabisa/moosend-go-client/commons"
 	"github.com/kitabisa/perkakas/v2/httpclient"
@@ -26,8 +27,8 @@ func NewClient(baseUrl, apiKey string, httpClient *httpclient.HttpClient) Client
 }
 
 func (c client) GetSubsriberByEmail(format commons.Format, mailingListID, email string) (returnData Subscriber, err error) {
-	url := fmt.Sprintf("%s/subscribers/%s/view.%s?apikey=%s&Email=%s", c.BaseURL, mailingListID, format, c.APIKey, email)
-	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodGet, url, nil)
+	apiUrl := fmt.Sprintf("%s/subscribers/%s/view.%s?apikey=%s&Email=%s", c.BaseURL, mailingListID, format, c.APIKey, url.QueryEscape(email))
+	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodGet, apiUrl, nil)
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())
 		return
@@ -56,8 +57,8 @@ func (c client) GetSubsriberByEmail(format commons.Format, mailingListID, email 
 }
 
 func (c client) GetSubscriberByID(format commons.Format, mailingListID, id string) (returnData Subscriber, err error) {
-	url := fmt.Sprintf("%s/subscribers/%s/find/%s.%s?apikey=%s", c.BaseURL, mailingListID, id, format, c.APIKey)
-	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodGet, url, nil)
+	apiUrl := fmt.Sprintf("%s/subscribers/%s/find/%s.%s?apikey=%s", c.BaseURL, mailingListID, id, format, c.APIKey)
+	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodGet, apiUrl, nil)
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())
 		return
@@ -92,8 +93,8 @@ func (c client) AddSubscriber(format commons.Format, mailingListID string, reque
 		return
 	}
 
-	url := fmt.Sprintf("%s/subscribers/%s/subscribe.%s?apikey=%s", c.BaseURL, mailingListID, format, c.APIKey)
-	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, url, bytes.NewReader(payload))
+	apiUrl := fmt.Sprintf("%s/subscribers/%s/subscribe.%s?apikey=%s", c.BaseURL, mailingListID, format, c.APIKey)
+	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, apiUrl, bytes.NewReader(payload))
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())
 		return
@@ -128,8 +129,8 @@ func (c client) UpdateSubscriber(format commons.Format, mailingListID, subscribe
 		return
 	}
 
-	url := fmt.Sprintf("%s/subscribers/%s/update/%s.%s?apikey=%s", c.BaseURL, mailingListID, subscriberID, format, c.APIKey)
-	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, url, bytes.NewReader(payload))
+	apiUrl := fmt.Sprintf("%s/subscribers/%s/update/%s.%s?apikey=%s", c.BaseURL, mailingListID, subscriberID, format, c.APIKey)
+	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, apiUrl, bytes.NewReader(payload))
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())
 		return
@@ -164,8 +165,8 @@ func (c client) UnsubscribeFromAccount(format commons.Format, request Unsubscrib
 		return
 	}
 
-	url := fmt.Sprintf("%s/subscribers/unsubscribe.%s?apikey=%s", c.BaseURL, format, c.APIKey)
-	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, url, bytes.NewReader(payload))
+	apiUrl := fmt.Sprintf("%s/subscribers/unsubscribe.%s?apikey=%s", c.BaseURL, format, c.APIKey)
+	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, apiUrl, bytes.NewReader(payload))
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())
 		return
@@ -198,8 +199,8 @@ func (c client) UnsubscribeFromMailingList(format commons.Format, mailingListID 
 		return
 	}
 
-	url := fmt.Sprintf("%s/subscribers/%s/unsubscribe.%s?apikey=%s", c.BaseURL, mailingListID, format, c.APIKey)
-	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, url, bytes.NewReader(payload))
+	apiUrl := fmt.Sprintf("%s/subscribers/%s/unsubscribe.%s?apikey=%s", c.BaseURL, mailingListID, format, c.APIKey)
+	resp, body, err := commons.MakeRequest(c.HTTPClient, http.MethodPost, apiUrl, bytes.NewReader(payload))
 	if err != nil {
 		err = fmt.Errorf("[moosend-client] %s", err.Error())
 		return
